@@ -1,5 +1,4 @@
-# Tripleten
-Dashboard de Anúncios de Veículos
+# Dashboard de Anúncios de Veículos
 
 Este projeto é um aplicativo web desenvolvido com Streamlit, pandas e Plotly Express para explorar dados de anúncios de veículos usados.
 

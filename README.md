@@ -13,3 +13,10 @@ Este projeto é um aplicativo web desenvolvido com Streamlit, pandas e Plotly Ex
 ```bash
 pip install -r requirements.txt
 streamlit run app.py
+```
+
+## Aplicativo publicado
+
+Acesse o aplicativo publicado no Render:
+
+https://tripleten-4evz.onrender.com/

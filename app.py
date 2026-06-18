@@ -1,70 +1,22 @@
 import pandas as pd
-import scipy.stats
+import plotly.express as px
 import streamlit as st
-import time
 
-# Variáveis persistentes preservadas quando o Streamlit executa novamente o script
-if 'experiment_no' not in st.session_state:
-    st.session_state['experiment_no'] = 0
+car_data = pd.read_csv("vehicles_us.csv")
 
-if 'df_experiment_results' not in st.session_state:
-    st.session_state['df_experiment_results'] = pd.DataFrame(
-        columns=['no', 'iterations', 'mean']
-    )
+st.header("Dashboard de Anúncios de Veículos")
+st.write("Análise exploratória de anúncios de veículos usados.")
 
-st.header('Jogando uma moeda')
+build_histogram = st.checkbox("Criar histograma da quilometragem")
 
-chart = st.line_chart([0.5])
+if build_histogram:
+    st.write("Criando um histograma para a coluna odometer")
+    fig = px.histogram(car_data, x="odometer")
+    st.plotly_chart(fig, use_container_width=True)
 
-def toss_coin(n):
-    trial_outcomes = scipy.stats.bernoulli.rvs(p=0.5, size=n)
+build_scatter = st.checkbox("Criar gráfico de dispersão preço vs quilometragem")
 
-    mean = None
-    outcome_no = 0
-    outcome_1_count = 0
-
-    for r in trial_outcomes:
-        outcome_no += 1
-
-        if r == 1:
-            outcome_1_count += 1
-
-        mean = outcome_1_count / outcome_no
-        chart.add_rows([mean])
-        time.sleep(0.05)
-
-    return mean
-
-number_of_trials = st.slider('Número de tentativas?', 1, 1000, 10)
-start_button = st.button('Executar')
-
-if start_button:
-    st.write(f'Executando o experimento de {number_of_trials} tentativas.')
-
-    st.session_state['experiment_no'] += 1
-
-    mean = toss_coin(number_of_trials)
-
-    st.session_state['df_experiment_results'] = pd.concat(
-        [
-            st.session_state['df_experiment_results'],
-            pd.DataFrame(
-                data=[
-                    [
-                        st.session_state['experiment_no'],
-                        number_of_trials,
-                        mean
-                    ]
-                ],
-                columns=['no', 'iterations', 'mean']
-            )
-        ],
-        axis=0
-    )
-
-    st.session_state['df_experiment_results'] = (
-        st.session_state['df_experiment_results']
-        .reset_index(drop=True)
-    )
-
-st.write(st.session_state['df_experiment_results'])
+if build_scatter:
+    st.write("Criando um gráfico de dispersão para price e odometer")
+    fig = px.scatter(car_data, x="odometer", y="price")
+    st.plotly_chart(fig, use_container_width=True)
